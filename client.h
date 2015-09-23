@@ -2,43 +2,48 @@
 #define _CLIENT_
 #define MAX_LENGTH 	300
 
-// STRUCTURES //
+// STRUCTURES
 
-// Structure containing all the info
-// for each booked flight 
-typedef struct info_flight info_flight; 
-struct info_flight
+/* Structure containing all the info
+for each booked flight 				*/
+typedef struct flight flight; 
+struct flight
 {
 	char origin[MAX_LENGTH] ;
 	char destination[MAX_LENGTH] ;
 	char date[MAX_LENGTH];
 	char hour[MAX_LENGTH];
-	char *flightCode;
+	char* code;
 	int numberPass ;
 }; 
 
-// Structure containing a reservation number
-// and the info for each flight (if round flight)
+/* Structure containing a reservation number,
+the name and surname of the booker and the
+info for each flight (if round flight) 	*/
 typedef struct reservation reservation ; 
 struct reservation
 {
-	int resNumber ;
-	info_flight goFlight ;
-	info_flight returnFlight ;
+	int number ;
+	char name[MAX_LENGTH] ;
+	char surname[MAX_LENGTH];
+	flight* goFlight ;
+	flight* returnFlight ;
 };
 
-// FUNCTIONS PROTOTYPE //
-void welcomeMessage(void);
-void getInfo();
-int stringParsing(char *string);
-char* selectFlight(info_flight flightData);
-void listInfo(void);
-void modifyInfo(void);
+// FUNCTIONS PROTOTYPE
+
+flight* createFlight() ;
+reservation* createReservation(flight* goFlight, flight* returnFlight);
+void welcomeMessage(reservation* tripData);
+void getInfo(reservation* tripData);
+int stringParsing(char *string, reservation* tripData, int mode);
+char* selectFlight(flight* flightData);
+void writeData(reservation* tripData);
+void listInfo(reservation* tripData);
+void modifyInfo(reservation* tripData);
 
 
-
-
-// GLOBAL VARIABLES //
+// GLOBAL VARIABLES 
 char* destinations[2][8]=
 {
 {"Buenos_Aires","Cordoba","Mendoza","Salta","Bariloche","El_Calafate","Ushuaia","Iguazu"},
