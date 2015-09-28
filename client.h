@@ -3,13 +3,12 @@
 #define MAX_LENGTH 	300
 
 // STRUCTURES
-
 /* Structure containing all the info
 for each booked flight 				*/
 typedef struct flight flight; 
 struct flight
 {
-	char origin[MAX_LENGTH] ;
+	char origin[MAX_LENGTH];
 	char destination[MAX_LENGTH] ;
 	char date[MAX_LENGTH];
 	char hour[MAX_LENGTH];
@@ -38,9 +37,12 @@ void welcomeMessage(reservation* tripData);
 void getInfo(reservation* tripData);
 int stringParsing(char *string, reservation* tripData, int mode);
 char* selectFlight(flight* flightData);
-void writeData(reservation* tripData);
-void listInfo(reservation* tripData);
-void modifyInfo(reservation* tripData);
+int codeToInt(char* r_code);
+void modifyNumberPass(int lineToMod, int numberPass);
+int numberReservation();
+void writeResData(reservation* tripData);
+void listInfo();
+void modifyInfo();
 
 
 // GLOBAL VARIABLES 
