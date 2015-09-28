@@ -41,12 +41,12 @@ int main(void) {
         "El_Calafate  (FTE)  ", "Bariloche    (BRC)  ", "Salta        (SLA)  "};
     
     char dates[FLIGHTS_QTY][DATE_LENGTH] = {
-        "06/01/2015", "06/01/2015", "06/01/2015", "06/01/2015", "06/01/2015",
-        "06/01/2015", "06/01/2015", "06/01/2015", "06/01/2015", "06/01/2015",
-        "06/01/2015", "06/01/2015", "06/01/2015", "06/01/2015", "06/01/2015",
-        "06/01/2015", "06/01/2015", "06/01/2015", "06/01/2015", "06/01/2015",
-        "06/01/2015", "06/01/2015", "06/01/2015", "06/01/2015", "06/01/2015",
-        "06/01/2015", "06/01/2015", "06/01/2015", "06/01/2015", "06/01/2015"};
+        "06/01/2016", "06/01/2016", "06/01/2016", "06/01/2016", "06/01/2016",
+        "06/01/2016", "06/01/2016", "06/01/2016", "06/01/2016", "06/01/2016",
+        "06/01/2016", "06/01/2016", "06/01/2016", "06/01/2016", "06/01/2016",
+        "06/01/2016", "06/01/2016", "06/01/2016", "06/01/2016", "06/01/2016",
+        "06/01/2016", "06/01/2016", "06/01/2016", "06/01/2016", "06/01/2016",
+        "06/01/2016", "06/01/2016", "06/01/2016", "06/01/2016", "06/01/2016"};
 
     char times[FLIGHTS_QTY][TIME_LENGTH] = {
         "03:09", "17:19", "17:38", "00:28", "15:53", "18:38", "18:03", "09:16", 
@@ -70,7 +70,7 @@ void initializeFlightsList(char origins[][CITY_LENGTH], char destinations[][CITY
     char dates[][DATE_LENGTH], char times[][TIME_LENGTH], char flightNumbers[][FLIGHT_NUMBER_LENGTH]) {
      int i, j;
      Matrix mList;
-     mList.responseCode = 0;
+     //mList.responseCode = 0;
      FILE *file = fopen(FLIGHT_LIST_PATH, "wb");
      if (file == NULL) {
         printf("Error creando el archivo para el listado de vuelos.\n");
@@ -82,11 +82,11 @@ void initializeFlightsList(char origins[][CITY_LENGTH], char destinations[][CITY
             strncpy(mList.values[i].date, dates[i], DATE_LENGTH);
             strncpy(mList.values[i].hour, times[i], TIME_LENGTH);
             strncpy(mList.values[i].flightNumber, flightNumbers[i], FLIGHT_NUMBER_LENGTH);
-            mList.values[i].seatsLeft = FLIGHTS_QTY;
+            //mList.values[i].seatsLeft = FLIGHTS_QTY;
             for(j = 0; j < STD_SEAT_QTY; j++){
-                strcpy((mList.values[i].seats)[j], "\0");
+                strcpy((mList.values[i].seats)[j], " ");
             }
-     }        
+     }
      if(fwrite(&mList, sizeof(mList), 1, file) != 1) {
         printf("Error creando el archivo para el listado de vuelos.\n");
         exit(EXIT_FAILURE);
@@ -106,9 +106,9 @@ void initializeFlights(char origins[][CITY_LENGTH], char destinations[][CITY_LEN
         strncpy(flights[i].date, dates[i], DATE_LENGTH);
         strncpy(flights[i].hour, times[i], TIME_LENGTH);
         strncpy(flights[i].flightNumber, flightNumbers[i], FLIGHT_NUMBER_LENGTH);
-        flights[i].seatsLeft = FLIGHTS_QTY;
+       // flights[i].seatsLeft = FLIGHTS_QTY;
         for(j = 0; j < STD_SEAT_QTY; j++){
-            strncpy((flights[i].seats)[j], "\0", MAX_LENGTH);
+            strcpy((flights[i].seats)[j], " ");
         }
         sprintf(flightName, FLIGHT_PATH, flights[i].flightNumber);
         FILE *file = fopen(flightName, "wb");
@@ -116,7 +116,7 @@ void initializeFlights(char origins[][CITY_LENGTH], char destinations[][CITY_LEN
             printf("Error creando el archivo para el vuelo %s.\n", flights[i].flightNumber);
             exit(EXIT_FAILURE);
         }
-        if (fwrite(&flights[i], sizeof(flights[i]), 1, file) != 1) {
+        if (fwrite(&flights[i], sizeof(Flight), 1, file) != 1) {
             printf("Error creando el archivo para el vuelo %s.\n", flights[i].flightNumber);
             exit(EXIT_FAILURE);
         }

@@ -70,10 +70,11 @@ void communicate() {
         printf("Error al abrir FIFO (cliente). \n");
         exit(EXIT_FAILURE);
     }
-    if(read(clientFd, &resp, sizeof(Response)) != sizeof(Response)) {
+    read(clientFd, &resp, sizeof(Response));
+    /* VA ESTO if(read(clientFd, &resp, sizeof(Response)) != sizeof(Response)) {
         perror("No se puede leer la respuesta del servidor.\n");
         return;
-    }
+    }*/
     if(close(clientFd) == -1) {
         printf("Error cerrando FIFO (cliente).\n");
         exit(EXIT_FAILURE);

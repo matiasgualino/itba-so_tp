@@ -66,13 +66,13 @@ int reserve_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
         return -4;
     }
 
-    if (strcmp(f.seats[seat-1], "") != 0) {
+    if (strcmp(f.seats[seat-1], " ") != 0) {
         unlockFile(fd);
         fclose(file);
         return SEAT_TAKEN;
     }
     
-    f.seatsLeft--;
+    //f.seatsLeft--;
     strncpy(f.seats[seat-1], c.username, MAX_LENGTH);
  
     fclose(file);
@@ -117,7 +117,7 @@ int cancel_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
     }
 
     strncpy(f.seats[seat-1], "\0", MAX_LENGTH);
-    f.seatsLeft++;
+    //f.seatsLeft++;
 
     FILE *file = fopen(flightName, "wb");
     if (file == NULL) {
@@ -156,5 +156,5 @@ int unlockFile(int fd){
 }
 
 bool noSeatsLeft(Flight f){
-    return f.seatsLeft == 0;
+    return false;// f.seatsLeft == 0;
 }

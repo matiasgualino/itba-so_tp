@@ -53,9 +53,10 @@ int main(int argc, char *argv[]) {
         }
 
         resp = execute(req);
-        if(write(clientFd, &resp, sizeof(Response)) != sizeof(Response)) {
+        write(clientFd, &resp, sizeof(Response));
+        /* VA ESTOif(write(clientFd, &resp, sizeof(Response)) != sizeof(Response)) {
             printf("Error escribiendo en el FIFO %s", clientFifo);
-        }
+        }*/
         if(close(clientFd) == -1) {
             printf("Error al cerrar el FIFO %s\n", clientFifo); 
         }

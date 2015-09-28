@@ -7,10 +7,6 @@
 #include "ipc.h"
 
 Response execute(Request r) {
-    printf("ACA LLEGA");
-
-    printf("\n COMM %u", r.comm);
-
     Response response;
     switch(r.comm){
         case RESERVE_SEAT:

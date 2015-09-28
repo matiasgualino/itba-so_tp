@@ -16,12 +16,11 @@ typedef struct {
     char date[DATE_LENGTH];
     char hour[TIME_LENGTH];
     char flightNumber[FLIGHT_NUMBER_LENGTH];
-    int seatsLeft;
     char seats[STD_SEAT_QTY][MAX_NAME_LENGTH];
 } Flight;
 
 typedef struct {
-    int responseCode;
+//    char *responseCode;
     Flight values[FLIGHTS_QTY];
 } Matrix;
 

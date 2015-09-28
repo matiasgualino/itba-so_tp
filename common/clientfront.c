@@ -109,10 +109,10 @@ void buy_flight(Client c) {
         return;
     }
 
-    if (f.seatsLeft == 0) {
+    /*if (f.seatsLeft == 0) {
         printf("No tenemos mas lugar en este vuelo.\n");
         return;
-    }
+    }*/
 
     char buf[1024];
     printf("Elija un asiento:\n"); 
