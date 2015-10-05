@@ -14,6 +14,7 @@
 
 static char clientFifo[CLIENT_FIFO_NAME_LEN];
 static int serverFd = -1, clientFd = -1;
+static void removeFifo(void);
 
 static void removeFifo(void){
     unlink(clientFifo);
@@ -24,7 +25,7 @@ void initClient() {
     umask(0);
     snprintf(clientFifo, CLIENT_FIFO_NAME_LEN, CLIENT_FIFO, (long) getpid());
 
-    if(mkfifo(clientFifo, S_IRWXU | S_IRWXG | S_IRWXO | S_IRUSR | S_IWUSR | S_IWGRP  | S_IFIFO | 0777) == -1 && errno != EEXIST) {
+    if(mknod(clientFifo, S_IFIFO | 0666, 0) == -1) {
         printf("Error creando el FIFO (cliente). %d\n", errno);
         exit(EXIT_FAILURE);
     }
@@ -62,18 +63,16 @@ void onSigInt(int sig){
 }
 
 void communicate() {
-    if(write(serverFd, &req, sizeof(Request)) != sizeof(Request)) {
-        perror("No se puede escribir en el servidor.\n");
-        return;
-    }
+    
+    write(serverFd, &req, sizeof(req));
+
     if( (clientFd = open(clientFifo, O_RDONLY)) == -1){
         printf("Error al abrir FIFO (cliente). \n");
         exit(EXIT_FAILURE);
     }
-    if(read(clientFd, &resp, sizeof(Response)) != sizeof(Response)) {
-        perror("No se puede leer la respuesta del servidor.\n");
-        return;
-    }
+    
+    read(clientFd, &resp, sizeof(resp));
+        
     if(close(clientFd) == -1) {
         printf("Error cerrando FIFO (cliente).\n");
         exit(EXIT_FAILURE);

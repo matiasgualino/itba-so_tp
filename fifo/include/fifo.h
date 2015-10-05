@@ -12,7 +12,6 @@
 #define CLIENT_FIFO_NAME_LEN (sizeof(CLIENT_FIFO) + 20)
 
 void communicate(void);
-static void removeFifo(void);
 void onSigInt(int sig);
 
 #endif
