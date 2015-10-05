@@ -77,7 +77,7 @@ void communicate() {
         perror("Fallo msgsnd de request en communicate");
         return;
     }
-    if((msgrcv(msqin, (char *)&respMsg, sizeof(respMsg), getpid(), 0)) == -1) {
+    if((msgrcv(msqin, (char *)&respMsg, sizeof(ReqMsg), getpid(), 0)) == -1) {
         perror("Fallo msgrcv de response en communicate");
         return;
     }

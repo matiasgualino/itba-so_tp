@@ -47,7 +47,7 @@ int main() {
         respMsg.resp = execute(reqMsg.req);
         respMsg.mtype = reqMsg.mtype;
         if(msgsnd(msqout, (char *)&respMsg, sizeof(RespMsg), 0) == -1) {
-            perror("Fallo msgsnd de response en initClient");
+            perror("Fallo msgsnd de response en main server");
             break;
         }
     }

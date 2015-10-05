@@ -14,12 +14,13 @@ int main() {
     Client currentUser = login();
     initClient();
     while(true){
-        printf("\nSeleccione una opcion del menu: \n\n");
-        printf("1. Listar vuelos disponibles.\n");
-        printf("2. Comprar un vuelo.\n");
-        printf("3. Cancelar una compra.\n");
-        printf("4. Salir.\n");
-        printf("Numero de opcion:");
+        printf("----------------------------------------------------------------------------");
+        printf("\nSeleccione una opcion del menu: \n");
+        printf("\t1. Listar vuelos disponibles.\n");
+        printf("\t2. Comprar un vuelo.\n");
+        printf("\t3. Cancelar una compra.\n");
+        printf("\t4. Salir.\n");
+        printf("Opcion:");
         scanf("%d", &command);
         execute_command(command, currentUser);
     }
@@ -46,6 +47,7 @@ void execute_command(int command, Client currentUser) {
 }
 
 void list_flights() {
+    printf("\nListado de vuelos disponibles\n");
     Matrix flights;
     flights = get_flights_list();
     switch(flights.responseCode) {
@@ -94,6 +96,7 @@ void print_flights(Flight flights[], int count) {
 }
 
 void cancel_order(Client c) {
+    printf("\nCancelacion de una reserva\n");
     char flightNumber[FLIGHT_NUMBER_LENGTH];
     int seat;
     printf("Numero de vuelo: ");
@@ -113,6 +116,7 @@ void cancel_order(Client c) {
 }
 
 void buy_flight(Client c) {
+    printf("\nCompra de un vuelo\n");
     int seat, aux = 1;
     char *flightNumber = malloc(FLIGHT_NUMBER_LENGTH * sizeof(char));
     char *date = malloc(DATE_LENGTH * sizeof(char));
@@ -120,7 +124,7 @@ void buy_flight(Client c) {
     char buf[1024];
     Flight f;
     
-    printf("Numero de vuelo: ");
+    printf("\nNumero de vuelo: ");
     fflush(stdout);
     scanf("%7s", flightNumber);
 
@@ -140,10 +144,10 @@ void buy_flight(Client c) {
     strncpy(date, f.date, DATE_LENGTH);
     strncpy(hour, f.hour, TIME_LENGTH);
     
-    printf("%s %s - %s\n", flightNumber, date, hour);
+    printf("\n%s %s - %s\n", flightNumber, date, hour);
     print_seats(f.seats);
 
-    printf("Elija un asiento:"); 
+    printf("\nElija un asiento:"); 
     while(aux) {
         fgets(buf, sizeof(buf), stdin);
 
@@ -159,7 +163,7 @@ void buy_flight(Client c) {
             printf(RED "El numero de asiento es invalido.\n" RESET);
         }
     }
-    printf(GREEN "Felicitaciones! El asiento %d del vuelo %s ya es tuyo.\n" RESET, seat, flightNumber);
+    printf(GREEN "\nFelicitaciones! El asiento %d del vuelo %s ya es tuyo.\n" RESET, seat, flightNumber);
     free(flightNumber);
     free(date);
     free(hour);
@@ -186,9 +190,9 @@ Client login() {
     char username[MAX_NAME_LENGTH],
          password[MAX_NAME_LENGTH];
 
-    printf("Ingrese su nombre de usuario:");
+    printf("Nombre de usuario:");
     scanf("%s", username);
-    printf("Ingrese su clave:");
+    printf("Clave:");
     scanf("%s", password);
     
     Client c;

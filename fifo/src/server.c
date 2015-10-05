@@ -32,7 +32,6 @@ int main(int argc, char *argv[]) {
 
     for(;;){
         if(read(serverFd, &req, sizeof(Request)) != sizeof(Request)) {
-            fprintf(stderr, "Error al leer el requerimiento.\n");    
             continue;
         } 
 
