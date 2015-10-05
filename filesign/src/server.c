@@ -113,14 +113,13 @@ void read_client_messages(void){
     closedir(dirp);
 }
 
-int
-server_communicate(long clientpid){
+int server_communicate(long clientpid) {
     if(kill(clientpid, SIGUSR2) == -1){
-        if( errno == EPERM)
-            printf("Client process exists, but we dont have permission "
-                   "to send it a signal\n");
-        else if( errno == ESRCH)
-            printf("Client process does not exist\n");
+        if( errno == EPERM) {
+            printf("El proceso cliente existe, pero no tenemos permisos.\n");
+        } else if( errno == ESRCH) {
+            printf("El proceso del cliente no existe.\n");
+        }
 		return -1;        
     }
     return 0;

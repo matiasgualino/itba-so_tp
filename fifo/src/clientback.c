@@ -89,7 +89,7 @@ Flight get_flight(char flightNumber[FLIGHT_NUMBER_LENGTH]){
 Matrix get_flights_list(){
     req.comm = FLIGHT_LIST;
     communicate();
-	return resp.matrix;
+    return resp.matrix;
 }
 
 int cancel_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){

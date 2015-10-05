@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 
         resp = execute(req);
         write(clientFd, &resp, sizeof(Response));
-        
+
         if(close(clientFd) == -1) {
             printf("Error al cerrar el FIFO %s\n", clientFifo); 
         }
