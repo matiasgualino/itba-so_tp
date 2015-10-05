@@ -15,6 +15,6 @@ void list_flights();
 void buy_flight(Client c);
 void cancel_order(Client c);
 void print_flights(Flight flights[], int count);
-void print_seats(char seats[STD_SEAT_QTY][MAX_LENGTH]);
+void print_seats(char seats[STD_SEAT_QTY][MAX_NAME_LENGTH]);
 
 #endif

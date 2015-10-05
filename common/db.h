@@ -1,7 +1,7 @@
 #ifndef DATABASEH
 #define DATABASEH
 
-#define SEAT_QTY 80
+#define SEAT_QTY 40
 #define FLIGHTS_QTY 30
 
 #endif

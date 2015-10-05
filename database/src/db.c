@@ -69,57 +69,59 @@ int main(void) {
 void initializeFlightsList(char origins[][CITY_LENGTH], char destinations[][CITY_LENGTH], 
     char dates[][DATE_LENGTH], char times[][TIME_LENGTH], char flightNumbers[][FLIGHT_NUMBER_LENGTH]) {
      int i, j;
-     Matrix mList;
-     mList.responseCode = 0;
+     Matrix *mList = malloc(sizeof(Matrix));
+     mList->responseCode = 0;
      FILE *file = fopen(FLIGHT_LIST_PATH, "wb");
      if (file == NULL) {
         printf("Error creando el archivo para el listado de vuelos.\n");
         exit(EXIT_FAILURE);
      }
+
      for(i = 0; i < FLIGHTS_QTY; i++) {
-            strncpy(mList.values[i].origin, origins[i], CITY_LENGTH);
-            strncpy(mList.values[i].destination, destinations[i], CITY_LENGTH);
-            strncpy(mList.values[i].date, dates[i], DATE_LENGTH);
-            strncpy(mList.values[i].hour, times[i], TIME_LENGTH);
-            strncpy(mList.values[i].flightNumber, flightNumbers[i], FLIGHT_NUMBER_LENGTH);
-            mList.values[i].seatsLeft = FLIGHTS_QTY;
+            strncpy(mList->values[i].origin, origins[i], CITY_LENGTH);
+            strncpy(mList->values[i].destination, destinations[i], CITY_LENGTH);
+            strncpy(mList->values[i].date, dates[i], DATE_LENGTH);
+            strncpy(mList->values[i].hour, times[i], TIME_LENGTH);
+            strncpy(mList->values[i].flightNumber, flightNumbers[i], FLIGHT_NUMBER_LENGTH);
+            mList->values[i].seatsLeft = FLIGHTS_QTY;
             for(j = 0; j < STD_SEAT_QTY; j++){
-                strcpy((mList.values[i].seats)[j], "\0");
+                strcpy((mList->values[i].seats)[j], "\0");
             }
      }        
-     if(fwrite(&mList, sizeof(mList), 1, file) != 1) {
+     if(fwrite(mList, sizeof(Matrix), 1, file) != 1) {
         printf("Error creando el archivo para el listado de vuelos.\n");
         exit(EXIT_FAILURE);
      }
      fclose(file);
+     free(mList);
 }
 
 void initializeFlights(char origins[][CITY_LENGTH], char destinations[][CITY_LENGTH], 
     char dates[][DATE_LENGTH], char times[][TIME_LENGTH], char flightNumbers[][FLIGHT_NUMBER_LENGTH]) {
     int i, j;
     char flightName[20];
-    Flight flights[FLIGHTS_QTY];
-    
     for(i = 0; i < FLIGHTS_QTY; i++) {
-        strncpy(flights[i].origin, origins[i], CITY_LENGTH);
-        strncpy(flights[i].destination, destinations[i], CITY_LENGTH);
-        strncpy(flights[i].date, dates[i], DATE_LENGTH);
-        strncpy(flights[i].hour, times[i], TIME_LENGTH);
-        strncpy(flights[i].flightNumber, flightNumbers[i], FLIGHT_NUMBER_LENGTH);
-        flights[i].seatsLeft = FLIGHTS_QTY;
+        Flight *flight = malloc(sizeof(Flight));
+        strncpy(flight->origin, origins[i], CITY_LENGTH);
+        strncpy(flight->destination, destinations[i], CITY_LENGTH);
+        strncpy(flight->date, dates[i], DATE_LENGTH);
+        strncpy(flight->hour, times[i], TIME_LENGTH);
+        strncpy(flight->flightNumber, flightNumbers[i], FLIGHT_NUMBER_LENGTH);
+        flight->seatsLeft = FLIGHTS_QTY;
         for(j = 0; j < STD_SEAT_QTY; j++){
-            strncpy((flights[i].seats)[j], "\0", MAX_LENGTH);
+            strcpy((flight->seats)[j], "\0");
         }
-        sprintf(flightName, FLIGHT_PATH, flights[i].flightNumber);
+        sprintf(flightName, FLIGHT_PATH, flight->flightNumber);
         FILE *file = fopen(flightName, "wb");
         if (file == NULL) {
-            printf("Error creando el archivo para el vuelo %s.\n", flights[i].flightNumber);
+            printf("Error creando el archivo para el vuelo %s.\n", flight->flightNumber);
             exit(EXIT_FAILURE);
         }
-        if (fwrite(&flights[i], sizeof(flights[i]), 1, file) != 1) {
-            printf("Error creando el archivo para el vuelo %s.\n", flights[i].flightNumber);
+        if (fwrite(flight, sizeof(Flight), 1, file) != 1) {
+            printf("Error creando el archivo para el vuelo %s.\n", flight->flightNumber);
             exit(EXIT_FAILURE);
         }
         fclose(file);
+        free(flight);
     }
 }

@@ -9,7 +9,6 @@ int rdlockFile(int fd);
 
 Flight get_flight(char flightNumber[FLIGHT_NUMBER_LENGTH]){
     Flight f;
-    f.flightNumber[0] = 0;
     char flightName[MAX_NAME_LENGTH];
 
     sprintf(flightName, FLIGHT_PATH_IPC, flightNumber);
@@ -66,7 +65,9 @@ int reserve_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
         return -4;
     }
 
-    if (strcmp(f.seats[seat-1], "") != 0) {
+    printf("\nSEAT = %s\n", f.seats[seat-1]);
+
+    if (strcmp(f.seats[seat-1], "\0") != 0) {
         unlockFile(fd);
         fclose(file);
         return SEAT_TAKEN;

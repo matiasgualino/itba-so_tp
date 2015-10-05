@@ -66,11 +66,31 @@ void list_flights() {
 
 void print_flights(Flight flights[], int count) {
     int i = 0;
+    char *flightNumber = malloc(FLIGHT_NUMBER_LENGTH * sizeof(char));
+    char *origin = malloc(CITY_LENGTH * sizeof(char));
+    char *destination = malloc(CITY_LENGTH * sizeof(char));
+    char *date = malloc(DATE_LENGTH * sizeof(char));
+    char *hour = malloc(TIME_LENGTH * sizeof(char));
+
     printf("Nro. Vuelo|\t       Origen       |\t      Destino       |\t   Fecha  |\tHora \n");
     for (i = 0; i < count; i++) {
+
+        strncpy(flightNumber, flights[i].flightNumber, FLIGHT_NUMBER_LENGTH);
+        strncpy(origin, flights[i].origin, CITY_LENGTH);
+        strncpy(destination, flights[i].destination, CITY_LENGTH);
+        strncpy(date, flights[i].date, DATE_LENGTH);
+        strncpy(hour, flights[i].hour, TIME_LENGTH);
+
         printf("  %s |\t%s|\t%s|\t%s|\t%s\n", 
-            flights[i].flightNumber, flights[i].origin, flights[i].destination, flights[i].date, flights[i].hour);
+            flightNumber, origin, destination, date, hour);
     }
+
+    free(flightNumber);
+    free(origin);
+    free(destination);
+    free(date);
+    free(hour);
+
 }
 
 void cancel_order(Client c) {
@@ -93,15 +113,17 @@ void cancel_order(Client c) {
 }
 
 void buy_flight(Client c) {
-    char flightNumber[FLIGHT_NUMBER_LENGTH];
     int seat, aux = 1;
-
+    char *flightNumber = malloc(FLIGHT_NUMBER_LENGTH * sizeof(char));
+    char *date = malloc(DATE_LENGTH * sizeof(char));
+    char *hour = malloc(TIME_LENGTH * sizeof(char));
+    char buf[1024];
+    Flight f;
+    
     printf("Numero de vuelo: ");
     fflush(stdout);
-    scanf("%s", flightNumber);
+    scanf("%7s", flightNumber);
 
-    Flight f;
-    f.origin[0] = 0;
     f = get_flight(flightNumber);    
 
     if (f.origin[0] == 0) {
@@ -114,10 +136,14 @@ void buy_flight(Client c) {
         return;
     }
 
-    char buf[1024];
-    printf("Elija un asiento:\n"); 
-    printf("%s %s - %s\n", f.flightNumber, f.date, f.hour);
+    strncpy(flightNumber, f.flightNumber, FLIGHT_NUMBER_LENGTH);
+    strncpy(date, f.date, DATE_LENGTH);
+    strncpy(hour, f.hour, TIME_LENGTH);
+    
+    printf("%s %s - %s\n", flightNumber, date, hour);
     print_seats(f.seats);
+
+    printf("Elija un asiento:"); 
     while(aux) {
         fgets(buf, sizeof(buf), stdin);
 
@@ -126,7 +152,7 @@ void buy_flight(Client c) {
             printf(RED "El numero de asiento es invalido.\n" RESET);
             continue;
         }
-        aux = reserve_seat(c, f.flightNumber, seat);
+        aux = reserve_seat(c, flightNumber, seat);
         if (aux == SEAT_TAKEN) {
             printf(YELLOW "Este asiento ya pertenece a otro pasajero. Elija otro.\n" RESET);
         } else if(aux == INVALID_SEAT) {
@@ -134,9 +160,12 @@ void buy_flight(Client c) {
         }
     }
     printf(GREEN "Felicitaciones! El asiento %d del vuelo %s ya es tuyo.\n" RESET, seat, flightNumber);
+    free(flightNumber);
+    free(date);
+    free(hour);
 }
 
-void print_seats(char seats[STD_SEAT_QTY][MAX_LENGTH]) {
+void print_seats(char seats[STD_SEAT_QTY][MAX_NAME_LENGTH]) {
     int row, col, seatNumber;
     for (row = 0; row < 4; row++) {
         for (col = 0; col < 10; col++) {
