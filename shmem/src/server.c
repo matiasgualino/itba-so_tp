@@ -13,12 +13,6 @@ int main() {
     Request *req;
     Response *resp;
 
-    FILE *file = fopen("/tmp/shm", "wb");
-    if (file == NULL) {
-        perror("Error al abrir el archivo temporal de semaforos.");
-    }
-    fclose(file);
-
     req = (Request *)getmem();
     memset(req, 0, SIZE);
     resp = (Response *)req; 

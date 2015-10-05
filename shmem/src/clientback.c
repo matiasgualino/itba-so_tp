@@ -33,12 +33,17 @@ Flight get_flight(char flightNumber[FLIGHT_NUMBER_LENGTH]){
 }
 
 Matrix get_flights_list() {
+    printf("EL ERROR ESTA ACA\n");
     enter(1);
+    printf("DESPUES ENTER 1\n");
     shm_req->comm = FLIGHT_LIST;
     leave(2);
+    printf("DESPUES LEAVE 2\n");
     enter(3);
-    memcpy(shm_resp, shm_req, sizeof(Response));
+    printf("DESPUES ENTER 3\n");
+    memcpy(shm_resp, shm_req, sizeof(Request));
     leave(1);
+    printf("DESPUES LEAVE 1\n");
     return shm_resp->matrix;
 }
 

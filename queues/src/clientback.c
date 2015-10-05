@@ -43,41 +43,41 @@ void closeClient(){
 }
 
 Flight get_flight(char flightNumber[FLIGHT_NUMBER_LENGTH]){
-    req.comm = GET_FLIGHT;
-    strncpy(req.flightNumber, flightNumber, FLIGHT_NUMBER_LENGTH);
+    reqMsg.req.comm = GET_FLIGHT;
+    strncpy(reqMsg.req.flightNumber, flightNumber, FLIGHT_NUMBER_LENGTH);
     communicate();
-    return resp.flight;
+    return respMsg.resp.flight;
 }
 
 Matrix get_flights_list() {
-    req.comm = FLIGHT_LIST;
+    reqMsg.req.comm = FLIGHT_LIST;
     communicate();
-    return resp.matrix;
+    return respMsg.resp.matrix;
 }
 
 int cancel_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
-    req.comm = CANCEL_SEAT;
-    strncpy(req.flightNumber, flightNumber, FLIGHT_NUMBER_LENGTH);
-    req.seat = seat;
+    reqMsg.req.comm = CANCEL_SEAT;
+    strncpy(reqMsg.req.flightNumber, flightNumber, FLIGHT_NUMBER_LENGTH);
+    reqMsg.req.seat = seat;
     communicate();
-    return resp.responseCode;
+    return respMsg.resp.responseCode;
 }
 
 int reserve_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
-    req.comm = RESERVE_SEAT;
-    req.client = c;
-    strncpy(req.flightNumber, flightNumber, FLIGHT_NUMBER_LENGTH);
-    req.seat = seat;
+    reqMsg.req.comm = RESERVE_SEAT;
+    reqMsg.req.client = c;
+    strncpy(reqMsg.req.flightNumber, flightNumber, FLIGHT_NUMBER_LENGTH);
+    reqMsg.req.seat = seat;
     communicate();
-    return resp.responseCode;
+    return respMsg.resp.responseCode;
 }
 
 void communicate() {
-    if(msgsnd(msqout, (char *)&reqMsg, sizeof(ReqMsg), 0) == -1) {
+    if(msgsnd(msqout, &reqMsg, sizeof(reqMsg), 0) == -1) {
         perror("Fallo msgsnd de request en communicate");
         return;
     }
-    if((msgrcv(msqin, (char *)&respMsg, sizeof(ReqMsg), getpid(), 0)) == -1) {
+    if((msgrcv(msqin, &respMsg, sizeof(respMsg), reqMsg.mtype, 0)) == -1) {
         perror("Fallo msgrcv de response en communicate");
         return;
     }

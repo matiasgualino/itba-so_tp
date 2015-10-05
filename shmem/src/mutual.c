@@ -41,7 +41,7 @@ void closeServer() {
     if(semctl(semid, 0, IPC_RMID) != 0) {
     	exit_status = EXIT_FAILURE;
     } 
-    if(remove("/tmp/shm-SV") == -1) {
+    if(remove("/tmp/shm") == -1) {
     	exit_status = EXIT_FAILURE;
     } 
     exit(exit_status);
