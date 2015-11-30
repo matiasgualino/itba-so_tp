@@ -33,17 +33,12 @@ Flight get_flight(char flightNumber[FLIGHT_NUMBER_LENGTH]){
 }
 
 Matrix get_flights_list() {
-    printf("EL ERROR ESTA ACA\n");
     enter(1);
-    printf("DESPUES ENTER 1\n");
     shm_req->comm = FLIGHT_LIST;
     leave(2);
-    printf("DESPUES LEAVE 2\n");
     enter(3);
-    printf("DESPUES ENTER 3\n");
-    memcpy(shm_resp, shm_req, sizeof(Request));
+    memcpy(shm_resp, shm_req, sizeof(Response));
     leave(1);
-    printf("DESPUES LEAVE 1\n");
     return shm_resp->matrix;
 }
 
@@ -52,6 +47,7 @@ int cancel_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
     shm_req->comm = CANCEL_SEAT;
     strncpy(shm_req->flightNumber, flightNumber, FLIGHT_NUMBER_LENGTH);
     shm_req->seat = seat;
+    shm_req->client = c;
     leave(2);
     enter(3);
     memcpy(shm_resp, shm_req, sizeof(Response));

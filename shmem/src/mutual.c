@@ -2,9 +2,8 @@
 #include <signal.h>
 #include <errno.h>
 #include "mutual.h"
-#include "../../common/error_handling.h"
 
-static Request *mem;
+static void *mem;
 static int memid;
 static int semid;
 
@@ -41,7 +40,7 @@ void closeServer() {
     if(semctl(semid, 0, IPC_RMID) != 0) {
     	exit_status = EXIT_FAILURE;
     } 
-    if(remove("/tmp/shm") == -1) {
+    if(remove("tmp_shm") == -1) {
     	exit_status = EXIT_FAILURE;
     } 
     exit(exit_status);

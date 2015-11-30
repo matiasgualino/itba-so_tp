@@ -8,7 +8,6 @@
 #include "../../common/server.h"
 #include "mutual.h"
 
-
 int main() {
     Request *req;
     Response *resp;

@@ -12,7 +12,9 @@
 #include "../../common/ipc.h"
  
 #define SIZE sizeof(Request)
-#define SHARED_KEY ftok("/tmp/shm", 1)
+#define SHARED_KEY ftok("shm", 1)
+
+static int memid;
  
 void fatal(char *s);
 void *getmem();
