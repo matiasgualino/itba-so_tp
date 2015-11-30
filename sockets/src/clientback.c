@@ -11,7 +11,6 @@
 #include <unistd.h>
 #include "rdwrn.h"
 #include "../../common/clientback.h"
-#include "../../common/error_handling.h"
 #include "../../common/dbAccess.h"
 #include "../../common/ipc.h"
 #include "../../common/shared.h"
@@ -19,7 +18,6 @@
 #define HARDCODED_SV_IP "127.0.0.1"
 
 void communicate(void);
-void fatal(char *s);
 void onSigInt(int sig);
 
 static int cfd = -1;
@@ -100,4 +98,3 @@ int reserve_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
     communicate();
     return resp.responseCode;
 }
-

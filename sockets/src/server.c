@@ -6,7 +6,6 @@
 #include "mutual.h"
 #include "rdwrn.h"
 #include "../../common/shared.h"
-#include "../../common/error_handling.h"
 #include "../../common/server.h"
 #include "../../common/dbAccess.h"
 #include "../../common/ipc.h"
@@ -34,7 +33,7 @@ int main() {
     char service[NI_MAXSERV];
 
     if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
-        fatal("signal");
+        perror("signal");
 
     memset(&hints, 0, sizeof(struct addrinfo));
     hints.ai_canonname = NULL;
@@ -45,7 +44,7 @@ int main() {
     hints.ai_flags = AI_PASSIVE | AI_NUMERICSERV;
 
     if (getaddrinfo(NULL, "50000", &hints, &result) != 0)
-        fatal("getaddrinfo");
+        perror("getaddrinfo");
 
     optval = 1;
     for(rp = result; rp != NULL; rp = rp->ai_next){
@@ -54,20 +53,23 @@ int main() {
             continue;
         if(setsockopt(lfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval))
                 == -1)
-            fatal("setsockopt");
+            perror("setsockopt");
         if(bind(lfd, rp->ai_addr, rp->ai_addrlen) == 0)
             break;
         close(lfd);
     }
     if(rp == NULL)
-        fatal("Could not bind socket to any address");
+        perror("Could not bind socket to any address");
 
     if(listen(lfd, BACKLOG) == -1)
-        fatal("listen");
+        perror("listen");
 
     freeaddrinfo(result);
 
     for(;;) {
+
+        printf("ESPERANDO PETICION\n");
+
         addrlen = sizeof(struct sockaddr_storage);
         cfd = accept(lfd, (struct sockaddr *) &claddr, &addrlen);
         if(cfd == -1){
@@ -80,11 +82,20 @@ int main() {
             snprintf(addrStr, ADDRSTRLEN, "(%s, %s)", host, service);
         else
             snprintf(addrStr, ADDRSTRLEN, "(?UNKNOWN?)");
+
+        printf("VOY A LEER REQUEST\n");
+
         if (readn(cfd, &req, sizeof(Request)) != sizeof(Request)) {
             close(cfd);
             continue;
         }
+
+        printf("VOY A EXECUTE\n");
+
         resp = execute(req);
+
+        printf("TERMINO EXECUTE\n");
+
         if (writen(cfd, &resp, sizeof(Response)) != sizeof(Response))
             fprintf(stderr, "Error al escribir.");
 
