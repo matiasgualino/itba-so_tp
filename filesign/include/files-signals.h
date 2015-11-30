@@ -1,11 +1,11 @@
 
-#define CLIENT_FILE_TEMPLATE "client_file.%ld"
-#define SERVER_FILE_TEMPLATE "server_file.%ld"
+#define CLIENT_FILE_TEMPLATE "stoc/client_file.%ld"
+#define SERVER_FILE_TEMPLATE "stoc/server_file.%ld"
 #define CLIENT_FILE_NAME_LEN (sizeof(CLIENT_FILE_TEMPLATE) + 20)
 #define SERVER_FILE_NAME_LEN (sizeof(SERVER_FILE_TEMPLATE) + 20)
 #define SERVER_PID_FILE	"server_pid"
-#define CTOS_PATH "../ctos"
-#define STOC_PATH "../stoc"
+#define CTOS_PATH "ctos"
+#define STOC_PATH "stoc"
 
 void communicate(void);
 void fatal(char *s);

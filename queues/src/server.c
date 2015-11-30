@@ -3,7 +3,6 @@
 #include <errno.h>
 #include "../../common/dbAccess.h"
 #include "../../common/server.h"
-#include "../../common/error_handling.h"
 #include "mutual.h"
 
 static int msqin = -1, msqout = -1;
@@ -23,7 +22,7 @@ int main() {
     }
 
     for(;;){
-        if(msgrcv(msqin, &reqMsg, sizeof(reqMsg), 0, 0) == -1) {
+        if(msgrcv(msqin, &reqMsg, sizeof(Request), 0, 0) == -1) {
             if(errno == EINTR) {
                 continue;
             }
@@ -32,7 +31,7 @@ int main() {
         }
         respMsg.resp = execute(reqMsg.req);
         respMsg.mtype = reqMsg.mtype;
-        if(msgsnd(msqout, &respMsg, sizeof(respMsg), 0) == -1) {
+        if(msgsnd(msqout, &respMsg, sizeof(Response), 0) == -1) {
             perror("Fallo msgsnd de response en main server");
             break;
         }

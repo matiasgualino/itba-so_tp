@@ -19,6 +19,7 @@ Response execute(Request r) {
             response.flight = get_flight(r.flightNumber);
             break;
         case FLIGHT_LIST:
+            printf("voy a buscar la lista\n");
             response.matrix = get_flights_list();
             break;
         default:

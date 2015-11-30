@@ -73,11 +73,11 @@ int reserve_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
 }
 
 void communicate() {
-    if(msgsnd(msqout, &reqMsg, sizeof(reqMsg), 0) == -1) {
+    if(msgsnd(msqout, &reqMsg, sizeof(Request), 0) == -1) {
         perror("Fallo msgsnd de request en communicate");
         return;
     }
-    if((msgrcv(msqin, &respMsg, sizeof(respMsg), reqMsg.mtype, 0)) == -1) {
+    if((msgrcv(msqin, &respMsg, sizeof(Response), getpid(), 0)) == -1) {
         perror("Fallo msgrcv de response en communicate");
         return;
     }

@@ -8,7 +8,7 @@ int wrlockFile(int fd);
 int rdlockFile(int fd);
 
 Flight get_flight(char flightNumber[FLIGHT_NUMBER_LENGTH]){
-    Flight f;
+    Flight *f = malloc(sizeof(Flight));
     char flightName[MAX_NAME_LENGTH];
 
     sprintf(flightName, FLIGHT_PATH_IPC, flightNumber);
@@ -16,23 +16,23 @@ Flight get_flight(char flightNumber[FLIGHT_NUMBER_LENGTH]){
     FILE *file = fopen(flightName, "rb+");
     if (file == NULL) {
         printf("Numero de vuelo invalido.\n");
-        return f;
+        return *f;
     }
 
     int fd = fileno(file);
     if (wrlockFile(fd) == -1) {
         printf("Error haciendo lock del archivo del vuelo\n");
-        return f;
+        return *f;
     }
 
-    if (fread(&f, sizeof(Flight), 1, file) != 1) {
+    if (fread(f, sizeof(Flight), 1, file) != 1) {
         printf("Error leyendo del archivo\n"); 
-        return f;
+        return *f;
     }
    
     unlockFile(fd);
     fclose(file);
-    return f;
+    return *f;
 }
 
 int reserve_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
@@ -65,8 +65,6 @@ int reserve_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
         return -4;
     }
 
-    printf("\nSEAT = %s\n", f.seats[seat-1]);
-
     if (strcmp(f.seats[seat-1], "\0") != 0) {
         unlockFile(fd);
         fclose(file);
@@ -95,15 +93,20 @@ int reserve_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
 }
 
 Matrix get_flights_list() {
-    Matrix matrix;
-    matrix.responseCode = 0;
-    FILE *file = fopen(FLIGHT_LIST_PATH_IPC, "rb");
+    printf("Estoy en get_flights_list\n");
+    Matrix *matrix = malloc(sizeof(Matrix));
+    matrix->responseCode = 0;
+    printf("hago fopen\n");
+    FILE *file = fopen(FLIGHT_LIST_PATH_IPC, "rb+");
     if(file == NULL) {
-       matrix.responseCode = -1; 
-    } else if(fread(&matrix, sizeof(Matrix), 1, file) == -1) {
-        matrix.responseCode = -2;
+        printf("file null\n");
+       matrix->responseCode = -1; 
+    } else if(fread(matrix, sizeof(Matrix), 1, file) == -1) {
+        printf("error en read\n");
+        matrix->responseCode = -2;
     }
-    return matrix;
+    printf("te devuelvo la matriz\n");
+    return *matrix;
 }
 
 int cancel_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
@@ -113,7 +116,11 @@ int cancel_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
     f = get_flight(flightNumber);
     sprintf(flightName, FLIGHT_PATH_IPC, flightNumber); 
 
+    printf("SEAT = %s\n", f.seats[seat-1]);
+    printf("USER = %s\n", c.username);
+
     if (strncmp(f.seats[seat-1], c.username, strlen(c.username)) != 0) {
+        printf("ACA ESTA EL LIO\n");
         return 1;
     }
 

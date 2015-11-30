@@ -7,7 +7,6 @@
 #include <unistd.h>
 #include "../../common/clientback.h"
 #include "../../common/dbAccess.h"
-#include "../../common/error_handling.h"
 #include "../../common/ipc.h"
 #include "../../common/shared.h"
 #include "../include/fifo.h"

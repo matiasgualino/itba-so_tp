@@ -54,13 +54,15 @@ void sig_usr1_handler(int s){
     sigaddset(&signal_set, SIGUSR2);
 
     if(sigprocmask(SIG_BLOCK, &signal_set, NULL)==-1){
-       fatal("Error bloqueando seniales.");
+        printf("Error bloqueando seniales.");
+        exit(EXIT_FAILURE);
     }
 
     read_client_messages();
 
     if(sigprocmask(SIG_UNBLOCK, &signal_set, NULL) == -1){
-        fatal("Error desbloqueando seniales");
+        printf("Error desbloqueando seniales.");
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -70,7 +72,8 @@ void read_client_messages(void){
     struct dirent *direntp;
 
     if((dirp = opendir(CTOS_PATH)) == NULL){
-        fatal("error opening ctos directory\n");
+        printf("Error abriendo el directorio ctos.");
+        exit(EXIT_FAILURE);
     }
     while((direntp = readdir(dirp)) != NULL){
         if(direntp->d_name[0] == '.'){

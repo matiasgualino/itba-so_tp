@@ -68,7 +68,7 @@ int main(void) {
 
 void initializeFlightsList(char origins[][CITY_LENGTH], char destinations[][CITY_LENGTH], 
     char dates[][DATE_LENGTH], char times[][TIME_LENGTH], char flightNumbers[][FLIGHT_NUMBER_LENGTH]) {
-     int i, j;
+     int i;
      Matrix *mList = malloc(sizeof(Matrix));
      mList->responseCode = 0;
      FILE *file = fopen(FLIGHT_LIST_PATH, "wb");
@@ -83,10 +83,6 @@ void initializeFlightsList(char origins[][CITY_LENGTH], char destinations[][CITY
             strncpy(mList->values[i].date, dates[i], DATE_LENGTH);
             strncpy(mList->values[i].hour, times[i], TIME_LENGTH);
             strncpy(mList->values[i].flightNumber, flightNumbers[i], FLIGHT_NUMBER_LENGTH);
-            mList->values[i].seatsLeft = FLIGHTS_QTY;
-            for(j = 0; j < STD_SEAT_QTY; j++){
-                strcpy((mList->values[i].seats)[j], "\0");
-            }
      }        
      if(fwrite(mList, sizeof(Matrix), 1, file) != 1) {
         printf("Error creando el archivo para el listado de vuelos.\n");

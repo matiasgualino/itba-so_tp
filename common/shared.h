@@ -21,8 +21,16 @@ typedef struct {
 } Flight;
 
 typedef struct {
+    char origin[CITY_LENGTH];
+    char destination[CITY_LENGTH];
+    char date[DATE_LENGTH];
+    char hour[TIME_LENGTH];
+    char flightNumber[FLIGHT_NUMBER_LENGTH];
+} FlightInfo;
+
+typedef struct {
     int responseCode;
-    Flight values[FLIGHTS_QTY];
+    FlightInfo values[FLIGHTS_QTY];
 } Matrix;
 
 typedef struct{

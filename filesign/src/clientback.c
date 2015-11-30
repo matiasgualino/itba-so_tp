@@ -42,7 +42,7 @@ void sig_usr2_handler(int s) {
     snprintf(clientFile, SERVER_FILE_NAME_LEN, SERVER_FILE_TEMPLATE,
             (long) getpid());
 
-    FILE * file = fopen(clientFile, "rb");
+    FILE * file = fopen(clientFile, "rb+");
     if(file == NULL){
         printf("Error abriendo el archivo cliente %s \n", clientFile);				
         exit(EXIT_FAILURE);
@@ -60,7 +60,8 @@ void sig_usr2_handler(int s) {
     }
 
     if( sigprocmask(SIG_UNBLOCK, &signal_set, NULL) == -1 ){
-        fatal("Error desbloqueando seniales.");
+        printf("Error desbloqueando seniales.");
+        exit(EXIT_FAILURE);
     }
 }
 

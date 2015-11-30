@@ -10,7 +10,7 @@
 
 int main() {
     int command = -1;
-    printf(GREEN "\nBienvenido a AerolITBA\n" RESET);
+    printf(GREEN "\nAerolITBA | Bienvenido\n" RESET);
     Client currentUser = login();
     initClient();
     while(true){
@@ -48,11 +48,13 @@ void execute_command(int command, Client currentUser) {
 
 void list_flights() {
     printf("\nListado de vuelos disponibles\n");
+    int cantFlights = 0;
     Matrix flights;
     flights = get_flights_list();
     switch(flights.responseCode) {
         case 0:
-            print_flights(flights.values, FLIGHTS_QTY);
+            cantFlights = sizeof(flights.values) / sizeof(flights.values[0]);
+            print_flights(flights.values, cantFlights);
             break;
         case -1:
             printf(RED "No pudimos encontrar el listado de vuelos en nuestra base de datos.\n" RESET);
@@ -66,27 +68,36 @@ void list_flights() {
     }
 }
 
-void print_flights(Flight flights[], int count) {
+void substringToIndex(char string[], int index, char sub[]) {
+    int c = 0;
+    while (c < index) {
+        sub[c] = string[c];
+        c++;
+    }
+    sub[c] = '\0';
+}
+
+void print_flights(FlightInfo flights[], int count) {
     int i = 0;
+
     char *flightNumber = malloc(FLIGHT_NUMBER_LENGTH * sizeof(char));
     char *origin = malloc(CITY_LENGTH * sizeof(char));
     char *destination = malloc(CITY_LENGTH * sizeof(char));
     char *date = malloc(DATE_LENGTH * sizeof(char));
     char *hour = malloc(TIME_LENGTH * sizeof(char));
 
-    printf("Nro. Vuelo|\t       Origen       |\t      Destino       |\t   Fecha  |\tHora \n");
+    printf("Nro. Vuelo|\t       Origen       |\t      Destino       |\t   Fecha  \t|\tHora \t|\n");
     for (i = 0; i < count; i++) {
-
         strncpy(flightNumber, flights[i].flightNumber, FLIGHT_NUMBER_LENGTH);
         strncpy(origin, flights[i].origin, CITY_LENGTH);
         strncpy(destination, flights[i].destination, CITY_LENGTH);
         strncpy(date, flights[i].date, DATE_LENGTH);
         strncpy(hour, flights[i].hour, TIME_LENGTH);
 
-        printf("  %s |\t%s|\t%s|\t%s|\t%s\n", 
-            flightNumber, origin, destination, date, hour);
+        printf("  %s |\t%s|\t%s|\t%s\t|\t%s\t|\n", 
+            flightNumber, origin, destination, date, hour);       
     }
-
+    
     free(flightNumber);
     free(origin);
     free(destination);
@@ -153,14 +164,14 @@ void buy_flight(Client c) {
 
         if(scanf("%d", &seat) != 1){
             aux = INVALID_SEAT;
-            printf(RED "El numero de asiento es invalido.\n" RESET);
+            printf(RED "El numero de asiento es invalido.\n\nAsiento:" RESET);
             continue;
         }
         aux = reserve_seat(c, flightNumber, seat);
         if (aux == SEAT_TAKEN) {
-            printf(YELLOW "Este asiento ya pertenece a otro pasajero. Elija otro.\n" RESET);
+            printf(YELLOW "Este asiento ya pertenece a otro pasajero. Elija otro.\n\nAsiento:" RESET);
         } else if(aux == INVALID_SEAT) {
-            printf(RED "El numero de asiento es invalido.\n" RESET);
+            printf(RED "El numero de asiento es invalido.\n\nAsiento:" RESET);
         }
     }
     printf(GREEN "\nFelicitaciones! El asiento %d del vuelo %s ya es tuyo.\n" RESET, seat, flightNumber);

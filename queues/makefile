@@ -7,21 +7,18 @@ COMMON = ../common
 
 default: client server
 
-client: clientfront.o clientback.o error_handling.o
+client: clientfront.o clientback.o
 	@mkdir -p $(BIN)
-	$(CC) $(CFLAGS) -o $(BIN)/client clientfront.o error_handling.o clientback.o
+	$(CC) $(CFLAGS) -o $(BIN)/client clientfront.o clientback.o
 
 clientfront.o: $(COMMON)/clientfront.c $(COMMON)/clientfront.h $(COMMON)/dbAccess.h $(COMMON)/shared.h 
 	$(CC) $(CFLAGS) -c $(COMMON)/clientfront.c
 
-clientback.o: $(SRC)/clientback.c $(COMMON)/ipc.h $(COMMON)/shared.h $(COMMON)/dbAccess.h $(SRC)/mutual.h $(COMMON)/error_handling.c $(COMMON)/error_handling.h
-	$(CC) $(CFLAGS) -c $(SRC)/clientback.c $(COMMON)/error_handling.c
+clientback.o: $(SRC)/clientback.c $(COMMON)/ipc.h $(COMMON)/shared.h $(COMMON)/dbAccess.h $(SRC)/mutual.h 
+	$(CC) $(CFLAGS) -c $(SRC)/clientback.c
 
-server: server.o $(COMMON)/dbAccess.o $(COMMON)/servercommon.o error_handling.o
-	$(CC) $(CFLAGS) -o $(BIN)/server server.o $(COMMON)/dbAccess.o $(COMMON)/servercommon.o error_handling.o
-
-error_handling.o: $(COMMON)/error_handling.c $(COMMON)/error_handling.h
-	$(CC) $(CFLAGS) -c $(COMMON)/error_handling.c
+server: server.o $(COMMON)/dbAccess.o $(COMMON)/servercommon.o 
+	$(CC) $(CFLAGS) -o $(BIN)/server server.o $(COMMON)/dbAccess.o $(COMMON)/servercommon.o
 
 server.o: $(SRC)/server.c $(COMMON)/dbAccess.c $(COMMON)/ipc.h $(COMMON)/shared.h $(SRC)/mutual.h
 	$(CC) $(CFLAGS) -c $(SRC)/server.c $(COMMON)/dbAccess.c
