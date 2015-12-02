@@ -19,7 +19,6 @@ typedef struct  {
     Matrix matrix;
 } Response;
 
-static Request req;
-static Response resp;
+
 
 #endif

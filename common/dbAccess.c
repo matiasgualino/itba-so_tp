@@ -116,11 +116,7 @@ int cancel_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
     f = get_flight(flightNumber);
     sprintf(flightName, FLIGHT_PATH_IPC, flightNumber); 
 
-    printf("SEAT = %s\n", f.seats[seat-1]);
-    printf("USER = %s\n", c.username);
-
     if (strncmp(f.seats[seat-1], c.username, strlen(c.username)) != 0) {
-        printf("ACA ESTA EL LIO\n");
         return 1;
     }
 

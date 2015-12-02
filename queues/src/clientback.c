@@ -7,7 +7,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include "../../common/error_handling.h"
 #include "../../common/clientback.h"
 #include "../../common/shared.h"
 #include "../../common/ipc.h"
@@ -16,9 +15,11 @@ static ReqMsg reqMsg;
 static RespMsg respMsg;
 static int msqin = -1, msqout = -1;
 void communicate();
+void print_flightse(FlightInfo flights[], int count);
 
 void initClient() {
     signal(SIGINT, onSigInt);
+
     reqMsg.mtype = (long)getpid();
 
 	msqin = msgget(SERVER_KEY, IPC_CREAT | 0666); 
@@ -32,6 +33,7 @@ void initClient() {
         perror("Fallo msgget de CLIENTS_KEY en initClient");
         return;
     }
+
 }
 
 void onSigInt(int sig){
@@ -59,6 +61,7 @@ int cancel_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
     reqMsg.req.comm = CANCEL_SEAT;
     strncpy(reqMsg.req.flightNumber, flightNumber, FLIGHT_NUMBER_LENGTH);
     reqMsg.req.seat = seat;
+    reqMsg.req.client = c;
     communicate();
     return respMsg.resp.responseCode;
 }
@@ -73,11 +76,11 @@ int reserve_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
 }
 
 void communicate() {
-    if(msgsnd(msqout, &reqMsg, sizeof(Request), 0) == -1) {
+    if(msgsnd(msqout, (char*)&reqMsg, sizeof(ReqMsg), 0) == -1) {
         perror("Fallo msgsnd de request en communicate");
         return;
     }
-    if((msgrcv(msqin, &respMsg, sizeof(Response), getpid(), 0)) == -1) {
+    if((msgrcv(msqin, &respMsg, sizeof(RespMsg), getpid(), 0)) == -1) {
         perror("Fallo msgrcv de response en communicate");
         return;
     }

@@ -15,7 +15,7 @@
 #define FLIGHT_LIST_PATH "db/flight_list"
 #define FLIGHT_LIST_PATH_IPC "../database/db/flight_list"
 #define FLIGHT_PATH_IPC "../database/db/flight_%s" // flight_number
-#define FLIGHTS_QTY 30
+#define FLIGHTS_QTY 12
 
 bool noSeatsLeft(Flight m);
 Flight get_flight(char flightNumber[FLIGHT_NUMBER_LENGTH]);

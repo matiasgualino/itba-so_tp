@@ -4,7 +4,7 @@
 #define MAX_LENGTH 40
 #define MAX_NAME_LENGTH 30
 #define STD_SEAT_QTY 40
-#define FLIGHTS_QTY 30
+#define FLIGHTS_QTY 12
 #define CITY_LENGTH 20
 #define DATE_LENGTH 10
 #define TIME_LENGTH 5

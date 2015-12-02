@@ -99,6 +99,7 @@ int cancel_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
     req.comm = CANCEL_SEAT;
     strncpy(req.flightNumber, flightNumber, FLIGHT_NUMBER_LENGTH);
     req.seat = seat;
+    req.client = c;
     communicate_with_server();
     return resp.responseCode;
 }
@@ -151,7 +152,7 @@ void communicate() {
     }
 }
 
-void  communicate_with_server() {
+void communicate_with_server() {
     sigset_t mask,oldmask;
     create_client_file();
     communicate();
