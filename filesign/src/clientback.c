@@ -43,23 +43,23 @@ void sig_usr2_handler(int s) {
             (long) getpid());
 
     FILE * file = fopen(clientFile, "rb+");
-    if(file == NULL){
+    if(file == NULL) {
         printf("Error abriendo el archivo cliente %s \n", clientFile);				
         exit(EXIT_FAILURE);
     }
-    if(fread(&resp, sizeof(Response), 1, file) == -1){
+    if(fread(&resp, sizeof(Response), 1, file) == -1) {
         printf("Error leyendo el archivo cliente %s \n", clientFile);
         exit(EXIT_FAILURE);
     }
 
     fclose(file);
 
-    if(remove(clientFile) == -1){
+    if(remove(clientFile) == -1) {
         printf("Error eliminado el archivo del cliente %s \n", clientFile);
         exit(EXIT_FAILURE);
     }
 
-    if( sigprocmask(SIG_UNBLOCK, &signal_set, NULL) == -1 ){
+    if(sigprocmask(SIG_UNBLOCK, &signal_set, NULL) == -1) {
         printf("Error desbloqueando seniales.");
         exit(EXIT_FAILURE);
     }
@@ -78,24 +78,24 @@ void closeClient() {
     exit(exit_status);
 }
 
-void onSigInt(int sig){
+void onSigInt(int sig) {
     closeClient();
 }
 
-Flight get_flight(char flightNumber[FLIGHT_NUMBER_LENGTH]){
+Flight get_flight(char flightNumber[FLIGHT_NUMBER_LENGTH]) {
     req.comm = GET_FLIGHT;
     strncpy(req.flightNumber, flightNumber, FLIGHT_NUMBER_LENGTH);
     communicate_with_server();
     return resp.flight;
 }
 
-Matrix get_flights_list(void){
+Matrix get_flights_list() {
     req.comm = FLIGHT_LIST;
     communicate_with_server();
     return resp.matrix;
 }
 
-int cancel_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
+int cancel_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat) {
     req.comm = CANCEL_SEAT;
     strncpy(req.flightNumber, flightNumber, FLIGHT_NUMBER_LENGTH);
     req.seat = seat;
@@ -104,7 +104,7 @@ int cancel_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
     return resp.responseCode;
 }
 
-int reserve_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
+int reserve_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat) {
     req.comm = RESERVE_SEAT;
     req.client = c;
     strncpy(req.flightNumber, flightNumber, FLIGHT_NUMBER_LENGTH);
@@ -113,26 +113,26 @@ int reserve_seat(Client c, char flightNumber[FLIGHT_NUMBER_LENGTH], int seat){
     return resp.responseCode;
 }
 
-void create_client_file() {
+void create_client_file(void) {
     snprintf(clientFile, CLIENT_FILE_NAME_LEN, CLIENT_FILE_TEMPLATE,
             (long) getpid());
     FILE *file = fopen(clientFile, "wb");
-    if(file == NULL){
+    if(file == NULL) {
         printf("error while creating %s file\n",clientFile);
         exit(EXIT_FAILURE);
     }
-    if( fwrite(&req,sizeof(Request),1,file) == -1 ){
+    if(fwrite(&req,sizeof(Request),1,file) == -1) {
         printf("error while writing %s file\n", clientFile);
         exit(EXIT_FAILURE);
     }
     fclose(file);
 }
 
-void communicate() {
+void communicate(void) {
     long serverpid;
 
     FILE *file = fopen(SERVER_PID_FILE, "rb");
-    if ( file == NULL ){
+    if (file == NULL) {
         printf("Error abriendo el archivo de server_pid.\n");
         exit(EXIT_FAILURE);
     }
@@ -142,7 +142,7 @@ void communicate() {
     }
     fclose(file);
 
-    if(kill(serverpid, SIGUSR1) == -1 ){
+    if(kill(serverpid, SIGUSR1) == -1) {
         if(errno == EPERM) {
             printf("Existe el proceso. No tenemos permisos para matarlo.\n");            
         } else if(errno == ESRCH) {
@@ -152,10 +152,11 @@ void communicate() {
     }
 }
 
-void communicate_with_server() {
+void communicate_with_server(void) {
     sigset_t mask,oldmask;
     create_client_file();
     communicate();
+
     sigaction(SIGUSR2,&sig,NULL);
 
     if(sigprocmask(SIG_BLOCK, &mask, &oldmask) == -1) {

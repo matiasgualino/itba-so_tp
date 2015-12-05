@@ -16,15 +16,15 @@ static struct sigaction sig;
 static Request req;
 static Response resp;
 
-int main(void){
+int main() {
     long p = (long)getpid();
     FILE *file = fopen(SERVER_PID_FILE, "wb");
     
-    if ( file == NULL ){
+    if(file == NULL) {
         printf("Error mientras se crea el archivo server_pid\n");
         exit(EXIT_FAILURE);
     }
-    if( fwrite(&p, sizeof(p), 1, file) != 1 ){
+    if(fwrite(&p, sizeof(p), 1, file) != 1) {
         printf("Error al escribir el archivo server_pid\n");
         exit(EXIT_FAILURE);
     }
@@ -41,41 +41,41 @@ int main(void){
     for(;;);
 }
 
-void onSigInt(int sig){
+void onSigInt(int sig) {
     int exit_status = EXIT_SUCCESS;
-    if( remove(SERVER_PID_FILE) == -1 ) exit_status = EXIT_FAILURE;    
+    if(remove(SERVER_PID_FILE) == -1) exit_status = EXIT_FAILURE;    
     exit(exit_status);
 }
 
-void sig_usr1_handler(int s){
+void sig_usr1_handler(int s) {
     sigset_t signal_set;
     sigemptyset(&signal_set);
     sigaddset(&signal_set, SIGUSR1);
     sigaddset(&signal_set, SIGUSR2);
 
-    if(sigprocmask(SIG_BLOCK, &signal_set, NULL)==-1){
+    if(sigprocmask(SIG_BLOCK, &signal_set, NULL) == -1) {
         printf("Error bloqueando seniales.");
         exit(EXIT_FAILURE);
     }
 
     read_client_messages();
-
-    if(sigprocmask(SIG_UNBLOCK, &signal_set, NULL) == -1){
+    
+    if(sigprocmask(SIG_UNBLOCK, &signal_set, NULL) == -1) {
         printf("Error desbloqueando seniales.");
         exit(EXIT_FAILURE);
     }
 }
 
-void read_client_messages(void){
+void read_client_messages(void) {
     char clientFile[CLIENT_FILE_NAME_LEN];
     DIR *dirp;
     struct dirent *direntp;
 
-    if((dirp = opendir(CTOS_PATH)) == NULL){
+    if((dirp = opendir(CTOS_PATH)) == NULL) {
         printf("Error abriendo el directorio ctos.");
         exit(EXIT_FAILURE);
     }
-    while((direntp = readdir(dirp)) != NULL){
+    while((direntp = readdir(dirp)) != NULL) {
         if(direntp->d_name[0] == '.'){
             continue;
         }
@@ -88,13 +88,13 @@ void read_client_messages(void){
             printf("Error while opening %s file\n",clientFile);
             exit(EXIT_FAILURE);
         }
-        if(fread(&req,sizeof(Request),1,file) == -1){
+        if(fread(&req,sizeof(Request),1,file) == -1) {
             printf("Error while reading from %s file\n",clientFile);
             exit(EXIT_FAILURE);
         }
         fclose(file);
         
-		if(remove(clientFile) == -1){
+        if(remove(clientFile) == -1){
             printf("Error while removing %s file\n",clientFile);
             exit(EXIT_FAILURE);
         }
@@ -106,18 +106,20 @@ void read_client_messages(void){
         printf("%s\n", clientFile);
 
         create_server_file(clientFile);
-        if(server_communicate(req.pid) == -1){
-			if(remove(clientFile) ==-1){
-				printf("error while removing %s file\n",clientFile);
-            	exit(EXIT_FAILURE);
-			}
-		}
+        
+        if(server_communicate(req.pid) == -1) {
+            if(remove(clientFile) ==-1){
+                printf("error while removing %s file\n",clientFile);
+                exit(EXIT_FAILURE);
+            }
+        }
     }
+
     closedir(dirp);
 }
 
 int server_communicate(long clientpid) {
-    if(kill(clientpid, SIGUSR2) == -1){
+    if(kill(clientpid, SIGUSR2) == -1) {
         if( errno == EPERM) {
             printf("El proceso cliente existe, pero no tenemos permisos.\n");
         } else if( errno == ESRCH) {
